@@ -30,3 +30,7 @@ export type RoomWarning = {
   created_at: string;
   warning_types?: WarningType;
 };
+
+export interface WarningWithWarningType extends WarningType {
+  room_warnings: RoomWarning[];
+}

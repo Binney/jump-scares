@@ -1,15 +1,11 @@
 "use client";
 
 import useSWR from "swr";
-import Link from "next/link";
 import { use } from "react";
 import { fetchRoom, fetchWarnings } from "@/utils/fetchers";
-import { Room, RoomWarning, WarningType } from "@/types/database.types";
+import { Room, RoomWarning, WarningType, WarningWithWarningType } from "@/types/database.types";
 import { useAuth } from "@/contexts/AuthContext";
-
-type WarningWithWarningType = WarningType & {
-  room_warnings: RoomWarning[];
-};
+import Link from "next/link";
 
 type PageProps = {
   params: Promise<{
@@ -20,9 +16,10 @@ type PageProps = {
 export default function RoomPage(props: PageProps) {
   const { id } = use(props.params);
   const { data: room, error: roomError } = useSWR<Room>(id, fetchRoom);
-  const { data: warnings = [], error: warningsError } = useSWR<
-    WarningWithWarningType[]
-  >(id ? `warnings-${id}` : null, () => fetchWarnings(id));
+  const { data: warnings = [], error: warningsError } = useSWR<WarningWithWarningType[]>(
+    id ? `warnings-${id}` : null,
+    () => fetchWarnings(id)
+  );
   const { user } = useAuth();
 
   const isLoading = !room && !roomError;
@@ -68,78 +65,83 @@ export default function RoomPage(props: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen p-8">
       <div className="max-w-4xl mx-auto">
-        {/* Room Header */}
-        <div className="bg-white shadow rounded-lg p-6 mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">{room.name}</h1>
-          <p className="text-lg text-gray-600 mb-4">{room.company}</p>
-          <div className="text-gray-500 space-y-1">
-            <p>{room.address}</p>
-            <p>{`${room.city}, ${room.country}`}</p>
+        <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">{room.name}</h1>
+              <p className="text-gray-600">
+                {room.company} • {room.city}, {room.country}
+              </p>
+            </div>
+            {user && (
+              <Link
+                href={`/rooms/${id}/edit`}
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                Edit Room
+              </Link>
+            )}
           </div>
-          {room.website_url && (
-            <a
-              href={room.website_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 hover:underline mt-4 inline-block"
-            >
-              Visit Website
-            </a>
-          )}
+
           {room.description && (
-            <p className="mt-4 text-gray-700">{room.description}</p>
+            <div className="mt-4">
+              <h2 className="text-lg font-semibold mb-2">Description</h2>
+              <p className="text-gray-600">{room.description}</p>
+            </div>
+          )}
+
+          {room.website_url && (
+            <div className="mt-4">
+              <h2 className="text-lg font-semibold mb-2">Website</h2>
+              <a
+                href={room.website_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 hover:underline"
+              >
+                {room.website_url}
+              </a>
+            </div>
           )}
         </div>
 
-        {/* Warnings Section */}
-        {warnings.length > 0 && (
-          <div className="bg-white shadow rounded-lg p-6 mb-6">
-            <h2 className="text-2xl font-bold text-red-600 mb-4">Warnings</h2>
-            <div className="space-y-4">
-              {warnings.map((warning) => (
-                <div
-                  key={warning.id}
-                  className="border-l-4 border-red-500 pl-4 py-2"
-                >
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-lg">{warning.name}</h3>
-                    <p>{warning.description}</p>
-                    <span className="text-sm text-gray-500">
-                      Overall severity:{" "}
-                      {warning.room_warnings.reduce(
-                        (acc, review) => acc + (review.severity || 0),
-                        0
-                      ) /
-                        warning.room_warnings.filter(
-                          (review) => review.severity !== null
-                        ).length || "?"}
-                      /5
-                    </span>
-                  </div>
-                  {warning.room_warnings.map((review, index) => (
-                    <p className="mt-1 text-gray-700" key={index}>
-                      &ldquo;{review.description}&rdquo;{" "}
-                      {review.severity || "?"}/5
-                    </p>
-                  ))}
-                </div>
-              ))}
-              {user && (
-                <p>
-                  Can&apos;t see the warning you want?
-                  <Link
-                    href={`/warning-types/add?redirect_room=${id}`}
-                    className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                  >
-                    Why not add it?
-                  </Link>
+        <div className="bg-white p-6 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-bold mb-6">Warnings</h2>
+          
+          {warnings.map((warning) => (
+            <div
+              key={warning.id}
+              className="border-l-4 border-red-500 pl-4 py-2"
+            >
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-lg">{warning.name}</h3>
+                <p>{warning.description}</p>
+                <span className="text-sm text-gray-500">
+                  Overall severity: {warning.room_warnings.reduce<number>((acc, review) => acc + (review.severity || 0), 0) / warning.room_warnings.filter(review => review.severity !== null).length || "?"}/5
+                </span>
+              </div>
+              {warning.room_warnings.map((review, index: number) => (
+                <p className="mt-1 text-gray-700" key={index}>
+                  &ldquo;{review.description}&rdquo; {review.severity || "?"}/5
                 </p>
-              )}
+              ))}
             </div>
-          </div>
-        )}
+          ))}
+
+          {user && (
+            <p>
+              Can&apos;t see the warning you want?
+              <Link
+                href={`/warning-types/add?redirect_room=${id}`}
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              >
+                Why not add it?
+              </Link>
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
