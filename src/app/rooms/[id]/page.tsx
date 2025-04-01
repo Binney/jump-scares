@@ -4,11 +4,10 @@ import useSWR from 'swr'
 import Link from 'next/link'
 import { use } from 'react'
 import { fetchRoom, fetchWarnings } from '@/utils/fetchers'
-import { Room, RoomWarning } from '@/types/database.types'
+import { Room, RoomWarning, WarningType } from '@/types/database.types'
 
-type WarningWithWarningType = Omit<RoomWarning, 'warning_types'> & {
-  warningName?: string;
-  warningDescription?: string;
+type WarningWithWarningType = WarningType & {
+  room_warnings: RoomWarning[]
 };
 
 type PageProps = {
@@ -25,14 +24,7 @@ export default function RoomPage(props: PageProps) {
   )
   const { data: warnings = [], error: warningsError } = useSWR<WarningWithWarningType[]>(
     id ? `warnings-${id}` : null,
-    () => fetchWarnings(id).then(data => 
-      data.map(warning => ({
-        ...warning,
-        warning_types: undefined,
-        warningName: warning.warning_types?.name,
-        warningDescription: warning.warning_types?.description,
-      }))
-    )
+    () => fetchWarnings(id)
   )
 
   const isLoading = !room && !roomError
@@ -111,21 +103,18 @@ export default function RoomPage(props: PageProps) {
                 >
                   <div className="flex items-center justify-between">
                     <h3 className="font-semibold text-lg">
-                      {warning.warningName}
+                      {warning.name}
                     </h3>
-                    <p>{warning.warningDescription}</p>
+                    <p>{warning.description}</p>
                     <span className="text-sm text-gray-500">
-                      Severity: {warning.severity || "?"}/5
+                      Overall severity: {warning.room_warnings.reduce((acc, review) => acc + (review.severity || 0), 0) / warning.room_warnings.filter(review => review.severity !== null).length || "?"}/5
                     </span>
                   </div>
-                  {warning.timestamp && (
-                    <p className="text-sm text-gray-500">
-                      Timestamp: {warning.timestamp}
+                  {warning.room_warnings.map((review, index) => (
+                    <p className="mt-1 text-gray-700" key={index}>
+                      &ldquo;{review.description}&rdquo; {review.severity || "?"}/5
                     </p>
-                  )}
-                  {warning.description && (
-                    <p className="mt-1 text-gray-700">{warning.description}</p>
-                  )}
+                  ))}
                 </div>
               ))}
             </div>

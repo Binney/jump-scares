@@ -27,24 +27,17 @@ export async function fetchRoom(id: string) {
 
 export async function fetchWarnings(roomId: string) {
   const { data, error } = await supabase
-    .from('room_warnings')
+    .from('warning_types')
     .select(`
-      id,
-      room_id,
-      user_id,
-      warning_type_id,
-      severity,
-      timestamp,
+      name,
       description,
-      created_at,
-      warning_types (
-        id,
-        name,
-        description
+      room_warnings:room_warnings!inner (
+        user_id,
+        description,
+        created_at
       )
     `)
-    .eq('room_id', roomId)
-    .order('created_at', { ascending: false })
+    .eq('room_warnings.room_id', roomId)
   
   if (error) throw error
   return data
