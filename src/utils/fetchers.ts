@@ -35,7 +35,6 @@ export async function fetchWarnings(
       id,
       name,
       description,
-      created_at,
       room_warnings:room_warnings!inner (
         id,
         room_id,
@@ -43,8 +42,7 @@ export async function fetchWarnings(
         warning_type_id,
         severity,
         timestamp,
-        description,
-        created_at
+        description
       )
     `
     )
