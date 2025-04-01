@@ -1,9 +1,9 @@
 'use client';
 
 import useSWR from 'swr';
-import { createClient } from '@/utils/supabase/client';
 import WarningTypeahead from './WarningTypeahead';
 import { useState, useEffect } from 'react';
+import supabase from '@/utils/supabase';
 
 export default function Search({
   search,
@@ -18,7 +18,6 @@ export default function Search({
   warningTypes: string[];
   onWarningTypeChange: (warningTypeId: string) => void;
 }) {
-  const supabase = createClient();
   const [localSearch, setLocalSearch] = useState(search);
 
   const { data: countries = [] } = useSWR<string[]>('countries', async () => {

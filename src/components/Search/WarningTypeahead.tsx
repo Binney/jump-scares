@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import useSWR from 'swr';
-import { createClient } from '@/utils/supabase/client';
+import supabase from '@/utils/supabase';
 
 interface WarningType {
   id: string;
@@ -24,8 +24,6 @@ export default function WarningTypeahead({
 }: WarningTypeaheadProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
-  const supabase = createClient();
-
   const { data: allWarnings = [] } = useSWR('warning-types', async () => {
     const { data, error } = await supabase
       .from('warning_types')

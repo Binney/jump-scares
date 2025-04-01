@@ -1,78 +1,76 @@
-'use client'
+"use client";
 
-import { createClient } from '@/utils/supabase/client'
-import { Room } from '@/types/database.types'
-import RoomCard from '@/components/Rooms/RoomCard'
-import { useCallback, useEffect, useState } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { useAuth } from '@/contexts/AuthContext'
+import supabase from "@/utils/supabase";
+import { Room } from "@/types/database.types";
+import RoomCard from "@/components/Rooms/RoomCard";
+import { useCallback, useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
 
-const ITEMS_PER_PAGE = 12
+const ITEMS_PER_PAGE = 12;
 
 export default function RoomsPage() {
-  const [rooms, setRooms] = useState<Room[]>([])
-  const [loading, setLoading] = useState(true)
-  const [totalCount, setTotalCount] = useState(0)
-  const { user } = useAuth()
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  
-  const page = parseInt(searchParams.get('page') || '1')
-  const search = searchParams.get('search') || ''
-  const country = searchParams.get('country') || ''
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [totalCount, setTotalCount] = useState(0);
+  const { user } = useAuth();
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
-  const supabase = createClient()
+  const page = parseInt(searchParams.get("page") || "1");
+  const search = searchParams.get("search") || "";
 
   const fetchRooms = useCallback(async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       // Build query
       let query = supabase
-        .from('rooms')
-        .select('*', { count: 'exact' })
-        
+        .from("rooms")
+        .select(
+          "id, name, company, address, city, country, location, description, website_url, created_at, updated_at, room_warnings:room_warnings!inner (warning_type_id)",
+          { count: "exact" }
+        );
+
       // Add search if present
       if (search) {
-        query = query.ilike('name', `%${search}%`)
+        query = query.ilike("name", `%${search}%`);
       }
-      
+
       // Add pagination
-      const start = (page - 1) * ITEMS_PER_PAGE
-      query = query
-        .range(start, start + ITEMS_PER_PAGE - 1)
-        .order('name')
+      const start = (page - 1) * ITEMS_PER_PAGE;
+      query = query.range(start, start + ITEMS_PER_PAGE - 1).order("name");
 
-      const { data, count, error } = await query
+      const { data, count, error } = await query;
 
-      if (error) throw error
-      
-      setRooms(data || [])
-      setTotalCount(count || 0)
+      if (error) throw error;
+
+      setRooms(data || []);
+      setTotalCount(count || 0);
     } catch (error) {
-      console.error('Error fetching rooms:', error)
+      console.error("Error fetching rooms:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [supabase, page, search])
+  }, [page, search]);
 
   useEffect(() => {
-    fetchRooms()
-  }, [fetchRooms])
+    fetchRooms();
+  }, [fetchRooms]);
 
-  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE)
+  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-    const searchTerm = formData.get('search') as string
-    
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const searchTerm = formData.get("search") as string;
+
     // Update URL with search params
-    const params = new URLSearchParams()
-    if (searchTerm) params.set('search', searchTerm)
-    params.set('page', '1') // Reset to first page on new search
-    router.push(`/rooms?${params.toString()}`)
-  }
+    const params = new URLSearchParams();
+    if (searchTerm) params.set("search", searchTerm);
+    params.set("page", "1"); // Reset to first page on new search
+    router.push(`/rooms?${params.toString()}`);
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -99,7 +97,7 @@ export default function RoomsPage() {
             placeholder="Search rooms..."
             className="flex-1 p-2 border rounded-lg"
           />
-          <button 
+          <button
             type="submit"
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
           >
@@ -114,12 +112,12 @@ export default function RoomsPage() {
         <>
           {/* Results count */}
           <p className="mb-4 text-gray-600">
-            {totalCount} room{totalCount !== 1 ? 's' : ''} found
+            {totalCount} room{totalCount !== 1 ? "s" : ""} found
           </p>
 
           {/* Grid of rooms */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {rooms.map(room => (
+            {rooms.map((room) => (
               <RoomCard key={room.id} room={room} />
             ))}
           </div>
@@ -130,26 +128,26 @@ export default function RoomsPage() {
               {page > 1 && (
                 <button
                   onClick={() => {
-                    const params = new URLSearchParams(searchParams)
-                    params.set('page', (page - 1).toString())
-                    router.push(`/rooms?${params.toString()}`)
+                    const params = new URLSearchParams(searchParams);
+                    params.set("page", (page - 1).toString());
+                    router.push(`/rooms?${params.toString()}`);
                   }}
                   className="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200"
                 >
                   Previous
                 </button>
               )}
-              
+
               <span className="px-4 py-2">
                 Page {page} of {totalPages}
               </span>
-              
+
               {page < totalPages && (
                 <button
                   onClick={() => {
-                    const params = new URLSearchParams(searchParams)
-                    params.set('page', (page + 1).toString())
-                    router.push(`/rooms?${params.toString()}`)
+                    const params = new URLSearchParams(searchParams);
+                    params.set("page", (page + 1).toString());
+                    router.push(`/rooms?${params.toString()}`);
                   }}
                   className="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200"
                 >
@@ -161,5 +159,5 @@ export default function RoomsPage() {
         </>
       )}
     </div>
-  )
+  );
 }

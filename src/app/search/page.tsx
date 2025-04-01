@@ -1,6 +1,6 @@
 "use client";
 
-import { createClient } from "@/utils/supabase/client";
+import supabase from "@/utils/supabase";
 import { Room } from "@/types/database.types";
 import RoomCard from "@/components/Rooms/RoomCard";
 import { useCallback, useEffect, useState } from "react";
@@ -20,7 +20,6 @@ export default function SearchPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [warningTypes, setWarningTypes] = useState<string[]>([]);
   const [debouncedWarningTypes, setDebouncedWarningTypes] = useState<string[]>([]);
-  const supabase = createClient();
 
   // Debounce warning type changes
   useEffect(() => {
@@ -95,7 +94,7 @@ export default function SearchPage() {
     } finally {
       setLoading(false);
     }
-  }, [supabase]);
+  }, []);
 
   useEffect(() => {
     fetchRooms(page, country, search, debouncedWarningTypes);
