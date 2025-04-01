@@ -42,3 +42,24 @@ export async function fetchWarnings(roomId: string) {
   if (error) throw error
   return data
 }
+
+export async function insertRoom(args: {
+  name: string;
+  company: string;
+  address: string;
+  city: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+  description?: string;
+  website_url?: string;
+}) {  
+  const { data: room, error } = await supabase
+    .from('rooms')
+    .insert([args])
+    .select()
+    .single();
+
+  if (error) throw error;
+  return room;
+}
