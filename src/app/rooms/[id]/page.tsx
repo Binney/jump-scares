@@ -16,7 +16,9 @@ type PageProps = {
 
 export default function RoomPage(props: PageProps) {
   const { id } = use(props.params);
-  const { data: room, error: roomError } = useSWR<Room>(id, fetchRoom);
+  const { data: room, error: roomError } = useSWR<Room>(id, fetchRoom, {
+    revalidateOnFocus: false,
+  });
   const { data: warnings = [], error: warningsError, mutate: mutateWarnings } = useSWR<
     WarningWithWarningType[]
   >(id ? `warnings-${id}` : null, () => fetchWarnings(id));

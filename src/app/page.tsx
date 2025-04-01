@@ -9,7 +9,9 @@ import RoomCard from "@/components/RoomCard";
 
 export default function Home() {
   const { user } = useAuth();
-  const { data: topRooms = [] } = useSWR("top-rooms", fetchTopRooms);
+  const { data: topRooms = [] } = useSWR("top-rooms", fetchTopRooms, {
+    revalidateOnFocus: false,
+  });
 
   return (
     <div className="min-h-screen p-8">

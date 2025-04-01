@@ -73,7 +73,7 @@ export default function AddWarningForm({ roomId, onWarningAdded }: AddWarningFor
     <div className="mb-8">
       <button
         onClick={() => setShowForm(!showForm)}
-        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
+        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md cursor-pointer"
       >
         {showForm ? "Cancel" : "Add Warning"}
       </button>
@@ -136,7 +136,7 @@ export default function AddWarningForm({ roomId, onWarningAdded }: AddWarningFor
             <button
               type="submit"
               disabled={isLoading}
-              className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md disabled:opacity-50"
+              className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md disabled:opacity-50 cursor-pointer"
             >
               {isLoading ? "Adding..." : "Add Warning"}
             </button>
