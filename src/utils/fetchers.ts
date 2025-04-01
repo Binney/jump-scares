@@ -1,4 +1,5 @@
 import { createBrowserClient } from '@supabase/ssr'
+import { Room } from '@/types/database.types'
 
 const supabase = createBrowserClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -76,4 +77,15 @@ export async function insertWarningType(args: {
 
   if (error) throw error;
   return warningType;
+}
+
+export async function fetchTopRooms() {
+  const { data: rooms, error } = await supabase
+    .from('rooms')
+    .select('id, name, company, address, city, country, location, description, website_url, created_at, updated_at')
+    .order('name')
+    .limit(3);
+
+  if (error) throw error;
+  return rooms as Room[];
 }
