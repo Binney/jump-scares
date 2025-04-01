@@ -2,15 +2,22 @@
 
 import { createBrowserClient } from '@supabase/ssr'
 import { createContext, useContext, useEffect, useState } from 'react'
+import { User } from '@supabase/supabase-js'
+import React from 'react';
 
-const AuthContext = createContext({})
+interface AuthContextType {
+  user: User | null;
+  supabase: ReturnType<typeof createBrowserClient>;
+}
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null)
+const AuthContext = createContext<AuthContextType>({} as AuthContextType)
+
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   )
 
   useEffect(() => {
