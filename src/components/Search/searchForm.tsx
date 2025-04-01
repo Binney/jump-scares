@@ -3,7 +3,7 @@
 import useSWR from 'swr';
 import { createClient } from '@/utils/supabase/client';
 import WarningTypeahead from './WarningTypeahead';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Search({
   search,
@@ -19,6 +19,7 @@ export default function Search({
   onWarningTypeChange: (warningTypeId: string) => void;
 }) {
   const supabase = createClient();
+  const [localSearch, setLocalSearch] = useState(search);
 
   const { data: countries = [] } = useSWR<string[]>('countries', async () => {
     const { data, error } = await supabase
@@ -32,14 +33,22 @@ export default function Search({
 
   const [excludedWarningTypes, setExcludedWarningTypes] = useState<string[]>([]);
 
+  // Debounce search changes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onSearchChanged(localSearch, country, excludedWarningTypes);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [localSearch, country, excludedWarningTypes, onSearchChanged]);
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchTerm = e.target.value;
-    onSearchChanged(searchTerm, country, excludedWarningTypes);
+    setLocalSearch(e.target.value);
   };
 
   const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCountry = e.target.value;
-    onSearchChanged(search, selectedCountry, excludedWarningTypes);
+    onSearchChanged(localSearch, selectedCountry, excludedWarningTypes);
   };
 
   const handleWarningTypeChange = (warningTypeId: string) => {
@@ -65,7 +74,7 @@ export default function Search({
           <input
             type="text"
             name="search"
-            value={search}
+            value={localSearch}
             onChange={handleSearchChange}
             placeholder="Search rooms..."
             className="w-full p-2 border rounded-lg"
