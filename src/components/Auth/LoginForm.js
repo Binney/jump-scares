@@ -1,7 +1,12 @@
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+'use client'
+
+import { createBrowserClient } from '@supabase/ssr'
 import { useRouter } from 'next/navigation'
 
-const supabase = createClientComponentClient()
+const supabase = createBrowserClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+)
 
 export default function LoginForm() {
   const router = useRouter()

@@ -1,4 +1,6 @@
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+'use client'
+
+import { createBrowserClient } from '@supabase/ssr'
 import { createContext, useContext, useEffect, useState } from 'react'
 
 const AuthContext = createContext({})
@@ -6,7 +8,10 @@ const AuthContext = createContext({})
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
-  const supabase = createClientComponentClient()
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  )
 
   useEffect(() => {
     // Check active sessions and sets the user
