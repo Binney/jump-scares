@@ -63,3 +63,17 @@ export async function insertRoom(args: {
   if (error) throw error;
   return room;
 }
+
+export async function insertWarningType(args: {
+  name: string;
+  description?: string;
+}) {
+  const { data: warningType, error } = await supabase
+    .from('warning_types')
+    .insert([args])
+    .select()
+    .single();
+
+  if (error) throw error;
+  return warningType;
+}
