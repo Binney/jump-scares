@@ -16,7 +16,6 @@ export type WarningType = {
   id: string;
   name: string;
   description: string | null;
-  created_at: string;
 };
 
 export type RoomWarning = {
@@ -28,9 +27,19 @@ export type RoomWarning = {
   timestamp: string | null;
   description: string | null;
   created_at: string;
+  updated_at: string;
   warning_types?: WarningType;
 };
 
 export interface WarningWithWarningType extends WarningType {
   room_warnings: RoomWarning[];
+}
+
+export interface NewRoomWarning {
+  room_id: string;
+  user_id: string;
+  warning_type_id: string;
+  severity: number;
+  description: string | null;
+  created_at: string;
 }

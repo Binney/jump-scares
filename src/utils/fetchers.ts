@@ -4,6 +4,7 @@ import {
   RoomWarning,
   WarningType,
   WarningWithWarningType,
+  NewRoomWarning,
 } from "@/types/database.types";
 
 const supabase = createBrowserClient(
@@ -99,4 +100,14 @@ export async function fetchTopRooms() {
 
   if (error) throw error;
   return rooms as Room[];
+}
+
+export async function createRoomWarning(args: NewRoomWarning) {
+  const { data, error } = await supabase
+    .from("room_warnings")
+    .insert([args])
+    .select();
+
+  if (error) throw error;
+  return data[0];
 }

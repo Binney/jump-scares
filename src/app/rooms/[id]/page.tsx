@@ -6,6 +6,7 @@ import { fetchRoom, fetchWarnings } from "@/utils/fetchers";
 import { Room, WarningWithWarningType } from "@/types/database.types";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
+import AddWarningForm from "@/components/Rooms/AddWarningForm";
 
 type PageProps = {
   params: Promise<{
@@ -16,7 +17,7 @@ type PageProps = {
 export default function RoomPage(props: PageProps) {
   const { id } = use(props.params);
   const { data: room, error: roomError } = useSWR<Room>(id, fetchRoom);
-  const { data: warnings = [], error: warningsError } = useSWR<
+  const { data: warnings = [], error: warningsError, mutate: mutateWarnings } = useSWR<
     WarningWithWarningType[]
   >(id ? `warnings-${id}` : null, () => fetchWarnings(id));
   const { user } = useAuth();
@@ -106,6 +107,16 @@ export default function RoomPage(props: PageProps) {
           )}
         </div>
 
+        {user && (
+          <AddWarningForm 
+            roomId={id} 
+            onWarningAdded={() => {
+              // Refresh the warnings list
+              mutateWarnings();
+            }} 
+          />
+        )}
+
         <div className="bg-white p-6 rounded-lg shadow-lg">
           <h2 className="text-2xl font-bold mb-6">Warnings</h2>
 
@@ -136,18 +147,6 @@ export default function RoomPage(props: PageProps) {
               ))}
             </div>
           ))}
-
-          {user && (
-            <p>
-              Can&apos;t see the warning you want?
-              <Link
-                href={`/warning-types/add?redirect_room=${id}`}
-                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-              >
-                Why not add it?
-              </Link>
-            </p>
-          )}
         </div>
       </div>
     </div>
