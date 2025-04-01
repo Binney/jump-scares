@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import React from 'react'
 
 export default function AuthError() {
   return (
@@ -24,7 +25,7 @@ export default function AuthError() {
           </Link>
           <Link
             href="/"
-            className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+            className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
           >
             Go Home
           </Link>

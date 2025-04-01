@@ -9,7 +9,9 @@ create table rooms (
   address text not null,
   city text not null,
   country text not null,
-  location geometry(Point, 4326), -- Using PostGIS point type
+  latitude float not null,
+  longitude float not null,
+  location geometry(Point, 4326) generated always as (st_setsrid(st_makepoint(longitude, latitude), 4326)) stored,
   description text,
   website_url text,
   created_at timestamp with time zone default now(),
@@ -47,22 +49,7 @@ create table review_warnings (
 -- Create indexes for efficient querying
 create index review_warnings_room_warning_idx on review_warnings(room_id, warning_type_id);
 create index rooms_location_idx on rooms using btree (city, country);
-create index rooms_geom_idx on rooms using gist(location); -- Spatial index for PostGIS
-
--- Function to set location point when latitude/longitude are provided
-create or replace function set_room_location()
-returns trigger as $$
-begin
-  new.location := st_setsrid(st_makepoint(new.longitude, new.latitude), 4326);
-  return new;
-end;
-$$ language plpgsql;
-
--- Trigger to automatically set location
-create trigger set_room_location_trigger
-before insert or update on rooms
-for each row
-execute function set_room_location();
+create index rooms_geom_idx on rooms using gist(location);
 
 -- Insert initial warning types
 insert into warning_types (name, description) values
