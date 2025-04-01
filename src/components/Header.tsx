@@ -18,8 +18,11 @@ export default function Header() {
             <Link href="/" className="text-xl font-bold">
               jumpscares
             </Link>
+            <Link href="/search" className="hover:text-gray-300">
+              Find a room
+            </Link>
             <Link href="/rooms" className="hover:text-gray-300">
-              Rooms
+              All rooms
             </Link>
           </div>
 
