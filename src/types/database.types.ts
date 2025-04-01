@@ -10,6 +10,9 @@ export type Room = {
   website_url: string | null;
   created_at: string;
   updated_at: string;
+  room_warnings: {
+    warning_type_id: string;
+  }[];
 };
 
 export type WarningType = {
