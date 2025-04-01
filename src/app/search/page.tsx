@@ -5,9 +5,7 @@ import { Room } from '@/types/database.types'
 import RoomCard from '@/components/Rooms/RoomCard'
 import { useCallback, useEffect, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { useAuth } from '@/contexts/AuthContext'
-import CountrySelector from '@/components/Rooms/CountrySelector'
+import Search from '@/components/Search/searchForm'
 
 const ITEMS_PER_PAGE = 12
 
@@ -15,7 +13,6 @@ export default function RoomsPage() {
   const [rooms, setRooms] = useState<Room[]>([])
   const [loading, setLoading] = useState(true)
   const [totalCount, setTotalCount] = useState(0)
-  const { user } = useAuth()
   const searchParams = useSearchParams()
   const router = useRouter()
   
@@ -68,14 +65,11 @@ export default function RoomsPage() {
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE)
 
-  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-    const searchTerm = formData.get('search') as string
-    
+  const handleSearch = (search: string, country: string) => {
     // Update URL with search params
     const params = new URLSearchParams()
-    if (searchTerm) params.set('search', searchTerm)
+    if (search) params.set('search', search)
+    if (country) params.set('country', country)
     params.set('page', '1') // Reset to first page on new search
     router.push(`/search?${params.toString()}`)
   }
@@ -85,27 +79,8 @@ export default function RoomsPage() {
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Find a room</h1>
       </div>
-      
-      <CountrySelector />
-      
-      {/* Search form */}
-      <form onSubmit={handleSearch} className="mb-8">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            name="search"
-            defaultValue={search}
-            placeholder="Search rooms..."
-            className="flex-1 p-2 border rounded-lg"
-          />
-          <button 
-            type="submit"
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-          >
-            Search
-          </button>
-        </div>
-      </form>
+
+      <Search search={search} country={country} onSearchChanged={handleSearch} />
 
       {loading ? (
         <div className="text-center py-8">Loading...</div>
@@ -131,7 +106,7 @@ export default function RoomsPage() {
                   onClick={() => {
                     const params = new URLSearchParams(searchParams)
                     params.set('page', (page - 1).toString())
-                    router.push(`/rooms?${params.toString()}`)
+                    router.push(`/search?${params.toString()}`)
                   }}
                   className="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200"
                 >
@@ -148,7 +123,7 @@ export default function RoomsPage() {
                   onClick={() => {
                     const params = new URLSearchParams(searchParams)
                     params.set('page', (page + 1).toString())
-                    router.push(`/rooms?${params.toString()}`)
+                    router.push(`/search?${params.toString()}`)
                   }}
                   className="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200"
                 >
