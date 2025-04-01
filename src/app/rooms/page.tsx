@@ -20,7 +20,8 @@ export default function RoomsPage() {
   
   const page = parseInt(searchParams.get('page') || '1')
   const search = searchParams.get('search') || ''
-  
+  const country = searchParams.get('country') || ''
+
   const supabase = createClient()
 
   const fetchRooms = useCallback(async () => {

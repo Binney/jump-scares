@@ -7,6 +7,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
+import CountrySelector from '@/components/Rooms/CountrySelector'
 
 const ITEMS_PER_PAGE = 12
 
@@ -20,6 +21,7 @@ export default function RoomsPage() {
   
   const page = parseInt(searchParams.get('page') || '1')
   const search = searchParams.get('search') || ''
+  const country = searchParams.get('country') || ''
   
   const supabase = createClient()
 
@@ -34,6 +36,11 @@ export default function RoomsPage() {
       // Add search if present
       if (search) {
         query = query.ilike('name', `%${search}%`)
+      }
+      
+      // Add country filter if present
+      if (country) {
+        query = query.eq('country', country)
       }
       
       // Add pagination
@@ -53,7 +60,7 @@ export default function RoomsPage() {
     } finally {
       setLoading(false)
     }
-  }, [supabase, page, search])
+  }, [supabase, page, search, country])
 
   useEffect(() => {
     fetchRooms()
@@ -70,24 +77,17 @@ export default function RoomsPage() {
     const params = new URLSearchParams()
     if (searchTerm) params.set('search', searchTerm)
     params.set('page', '1') // Reset to first page on new search
-    router.push(`/rooms?${params.toString()}`)
+    router.push(`/search?${params.toString()}`)
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Find a room</h1>
-        {user && (
-          <div className="space-x-4">
-            <Link
-              href="/rooms/add"
-              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Add Room
-            </Link>
-          </div>
-        )}
       </div>
+      
+      <CountrySelector />
+      
       {/* Search form */}
       <form onSubmit={handleSearch} className="mb-8">
         <div className="flex gap-2">

@@ -109,3 +109,26 @@ export async function createRoomWarning(args: NewRoomWarning) {
   if (error) throw error;
   return data[0];
 }
+
+export async function fetchRoomsByCountry(country: string): Promise<Room[]> {
+  const { data, error } = await supabase
+    .from("rooms")
+    .select(`
+      id,
+      name,
+      company,
+      address,
+      city,
+      country,
+      location,
+      description,
+      website_url,
+      created_at,
+      updated_at
+    `)
+    .eq("country", country)
+    .order("name");
+
+  if (error) throw error;
+  return data as Room[];
+}
