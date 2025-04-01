@@ -2,24 +2,37 @@
 
 import useSWR from 'swr'
 import Link from 'next/link'
+import { use } from 'react'
 import { fetchRoom, fetchWarnings } from '@/utils/fetchers'
-import { Room, RoomWarning, WarningType } from '@/types/database.types'
+import { Room, RoomWarning } from '@/types/database.types'
 
-type WarningWithWarningType = RoomWarning & {
-  warning_types?: WarningType;
+type WarningWithWarningType = Omit<RoomWarning, 'warning_types'> & {
+  warningName?: string;
+  warningDescription?: string;
 };
 
-export default function RoomPage({ params }: { params: { id: string } }) {
+type PageProps = {
+  params: Promise<{
+    id: string;
+  }>;
+};
+
+export default function RoomPage(props: PageProps) {
+  const { id } = use(props.params)
   const { data: room, error: roomError } = useSWR<Room>(
-    params.id,
+    id,
     fetchRoom
   )
   const { data: warnings = [], error: warningsError } = useSWR<WarningWithWarningType[]>(
-    params.id ? `warnings-${params.id}` : null,
-    async () => {
-      const data = await fetchWarnings(params.id)
-      return data as WarningWithWarningType[]
-    }
+    id ? `warnings-${id}` : null,
+    () => fetchWarnings(id).then(data => 
+      data.map(warning => ({
+        ...warning,
+        warning_types: undefined,
+        warningName: warning.warning_types?.name,
+        warningDescription: warning.warning_types?.description,
+      }))
+    )
   )
 
   const isLoading = !room && !roomError
@@ -98,10 +111,11 @@ export default function RoomPage({ params }: { params: { id: string } }) {
                 >
                   <div className="flex items-center justify-between">
                     <h3 className="font-semibold text-lg">
-                      {warning.warning_type.name}
+                      {warning.warningName}
                     </h3>
+                    <p>{warning.warningDescription}</p>
                     <span className="text-sm text-gray-500">
-                      Severity: {warning.severity}/5
+                      Severity: {warning.severity || "?"}/5
                     </span>
                   </div>
                   {warning.timestamp && (
