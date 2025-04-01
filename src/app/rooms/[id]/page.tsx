@@ -3,7 +3,7 @@
 import useSWR from "swr";
 import { use } from "react";
 import { fetchRoom, fetchWarnings } from "@/utils/fetchers";
-import { Room, RoomWarning, WarningType, WarningWithWarningType } from "@/types/database.types";
+import { Room, WarningWithWarningType } from "@/types/database.types";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 
@@ -16,10 +16,9 @@ type PageProps = {
 export default function RoomPage(props: PageProps) {
   const { id } = use(props.params);
   const { data: room, error: roomError } = useSWR<Room>(id, fetchRoom);
-  const { data: warnings = [], error: warningsError } = useSWR<WarningWithWarningType[]>(
-    id ? `warnings-${id}` : null,
-    () => fetchWarnings(id)
-  );
+  const { data: warnings = [], error: warningsError } = useSWR<
+    WarningWithWarningType[]
+  >(id ? `warnings-${id}` : null, () => fetchWarnings(id));
   const { user } = useAuth();
 
   const isLoading = !room && !roomError;
@@ -109,7 +108,7 @@ export default function RoomPage(props: PageProps) {
 
         <div className="bg-white p-6 rounded-lg shadow-lg">
           <h2 className="text-2xl font-bold mb-6">Warnings</h2>
-          
+
           {warnings.map((warning) => (
             <div
               key={warning.id}
@@ -119,7 +118,15 @@ export default function RoomPage(props: PageProps) {
                 <h3 className="font-semibold text-lg">{warning.name}</h3>
                 <p>{warning.description}</p>
                 <span className="text-sm text-gray-500">
-                  Overall severity: {warning.room_warnings.reduce<number>((acc, review) => acc + (review.severity || 0), 0) / warning.room_warnings.filter(review => review.severity !== null).length || "?"}/5
+                  Overall severity:{" "}
+                  {warning.room_warnings.reduce<number>(
+                    (acc, review) => acc + (review.severity || 0),
+                    0
+                  ) /
+                    warning.room_warnings.filter(
+                      (review) => review.severity !== null
+                    ).length || "?"}
+                  /5
                 </span>
               </div>
               {warning.room_warnings.map((review, index: number) => (

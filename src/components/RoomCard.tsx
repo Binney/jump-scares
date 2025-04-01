@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { Room } from '@/types/database.types';
+import Link from "next/link";
+import { Room } from "@/types/database.types";
 
 export default function RoomCard({ room }: { room: Room }) {
   return (
@@ -10,7 +10,7 @@ export default function RoomCard({ room }: { room: Room }) {
         <h3 className="text-lg font-semibold mb-2">{room.name}</h3>
         <p className="text-gray-600 text-sm mb-2">{room.company}</p>
         <p className="text-gray-500 text-sm">
-          {[room.city, room.country].filter(Boolean).join(', ')}
+          {[room.city, room.country].filter(Boolean).join(", ")}
         </p>
         {room.description && (
           <p className="text-gray-600 mt-2 line-clamp-2">{room.description}</p>

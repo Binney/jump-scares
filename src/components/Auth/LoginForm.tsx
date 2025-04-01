@@ -1,42 +1,42 @@
-'use client'
+"use client";
 
-import { createBrowserClient } from '@supabase/ssr'
-import { useRouter } from 'next/navigation'
-import React from 'react'
+import { createBrowserClient } from "@supabase/ssr";
+import { useRouter } from "next/navigation";
+import React from "react";
 
 const supabase = createBrowserClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+);
 
 export default function LoginForm() {
-  const router = useRouter()
+  const router = useRouter();
 
   const handleGithubLogin = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'github',
+      provider: "github",
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
       },
-    })
+    });
 
     if (error) {
-      console.error('Error:', error.message)
+      console.error("Error:", error.message);
     }
-  }
+  };
 
   const handleGoogleLogin = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
+      provider: "google",
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
       },
-    })
+    });
 
     if (error) {
-      console.error('Error:', error.message)
+      console.error("Error:", error.message);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
@@ -58,5 +58,5 @@ export default function LoginForm() {
         </div>
       </div>
     </div>
-  )
+  );
 }

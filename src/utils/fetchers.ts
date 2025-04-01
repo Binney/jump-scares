@@ -1,5 +1,10 @@
 import { createBrowserClient } from "@supabase/ssr";
-import { Room, RoomWarning, WarningType, WarningWithWarningType } from "@/types/database.types";
+import {
+  Room,
+  RoomWarning,
+  WarningType,
+  WarningWithWarningType,
+} from "@/types/database.types";
 
 const supabase = createBrowserClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -19,7 +24,9 @@ export async function fetchRoom(id: string) {
   return data as Room;
 }
 
-export async function fetchWarnings(roomId: string): Promise<WarningWithWarningType[]> {
+export async function fetchWarnings(
+  roomId: string
+): Promise<WarningWithWarningType[]> {
   const { data, error } = await supabase
     .from("warning_types")
     .select(
