@@ -131,7 +131,7 @@ export default function WarningTypeahead({
               No warnings found
             </div>
               : <div className="px-4 py-2 text-gray-500">
-                e.g. "Is there a live actor?"
+                e.g. &ldquo;Is there a live actor?&rdquo;
               </div>
           )}
         </div>
