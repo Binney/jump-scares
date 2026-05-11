@@ -1,0 +1,140 @@
+
+Create account
+- magic link
+Add room
+Add warning type
+Rate room
+
+Warning types phrased as clear objective questions
+
+Warnings to add
+Are there mannequins?
+Is there a sudden loud noise?
+Is there baby death?
+Is there child death?
+Is there medical malpractice?
+Is there a theme of miscarriage/abortion?
+Is there sudden bright light?
+Is there low light?
+Is there pitch blackness?
+Is there sexual violence/rape?
+Is there violence against women?
+Are there dolls?
+Are there animatronics?
+Is there a distorted voice?
+Is there disembodied/creepy laughter?
+Is there a child voice?
+Is there a gun/firearms?
+Is there an axe?
+Is there a knife?
+Is there eye horror?
+Is there tooth horror?
+Is there realistic gore?
+Is there blood?
+Are there internal organs?
+Is there a skeleton?
+Are there spiders?
+Are there insects (not counting spiders)?
+Are there snakes?
+Is there cannibalism?
+Are there rats or mice?
+Is there a creature with sharp teeth?
+Is there an aggressive dog?
+Are there clowns?
+Are there puppets?
+Are there ghosts?
+Do you get handcuffed?
+Do you get restrained?
+Does the team get forcibly separated?
+Do you get blindfolded?
+Do you get electrocuted?
+Are there police?
+Is there military?
+Is there a hallucinogenic experience?
+Is somebody drugged?
+Are there drugs (not including smoking)?
+Is there smoking?
+Is there alcohol?
+Is there alcohol abuse?
+Are there sexual themes?
+Is there a hospital?
+Is there a psychiatric ward?
+Is there a religious theme?
+Is there unreality?/Is the line between reality and fiction blurred?
+Is there terminal illness?
+Is there murder?
+Is there suicide?
+Is there death by hanging?
+Is there death by train/vehicle?
+Is there self-harm?
+Are there zombies?
+Is there cruelty to animals?
+Is there water?
+Is there domestic abuse?
+Is there infidelity?
+Are there needles/syringes?
+Are there references to toilets/bodily fluids (except blood)?
+Do you have to hide?
+Do you have to freeze in place?
+
+Is there offensive language?
+Is there racism?
+*split up into subcategories
+
+Is the introduction given in character?
+Is there a live actor (not including an in-character introduction)?
+Is there a cold open?/Is there no acknowledgement that this is an escape room at the beginning?
+Is there an entrance lobby/introduction area?
+Are you met in person at the start?
+Is there a live actor who is your enemy?
+Is there a live actor who is your ally?
+Is there improv dialogue with a live actor?
+Is there physical interaction with a live actor?
+Are the actors allowed to touch you?
+Do you get chased?
+Do you have to swim?
+Do you have to jump?
+Do you have to pull yourself up?
+Is balance needed?
+
+Is there crawling?
+Are there stairs?
+Is there climbing other than stairs?
+Are there notable trip hazards?
+Is there a fall hazard?
+Are there confined spaces?
+Is there a low ceiling?
+Are emergency exits available at all times?
+Is there fire?
+Is there strobe lighting?
+Are there flashing lights?
+Is there pyrotechnics?
+Are there lasers?
+Is there very loud music/noise for a short time?
+Is there very loud music/noise for an extended period?
+Is there fog/dry ice?
+Is there glitter/particles?
+Are there bubbles?
+Are there strong scents?
+Do you ingest anything?
+Is a sense of smell/taste needed?
+Is it colourblind friendly?
+Are dietary notes available for all food/drink provided?
+Do you have to run?
+Is there time pressure, beyond a normal escape room?
+Can you bring your phone in with you?
+Is dexterity needed?
+Can you use the toilet at any time during the game?
+Can you leave the game at any point and re-enter?
+Is strength needed?
+Do you have to carry a heavy object?
+Can you lose by running out of time?
+Can you lose other than by running out of time?
+Do they tell you your time unprompted?
+Is there space to sit down?
+Is the GM attentive to requests e.g. to turn the music down?
+Does it involve spelling?/Is it dyslexia friendly?
+Is there a lot of reading?
+Do you have to wear headphones?
+
+Is all content localised into the advertised language(s)?
