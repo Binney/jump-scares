@@ -1,13 +1,15 @@
 'use client';
 
+import { createClient } from '@/lib/supabase/client';
 import { useState, useEffect } from 'react';
 import useSWR from 'swr';
-import supabase from '@/utils/supabase';
 
 interface WarningType {
   id: string;
   name: string;
 }
+
+const supabase = createClient();
 
 interface WarningTypeaheadProps {
   selectedWarnings: string[];
@@ -29,15 +31,15 @@ export default function WarningTypeahead({
       .from('warning_types')
       .select('id, name')
       .order('name');
-    
+
     if (error) throw error;
     return data;
   }, { revalidateOnFocus: false });
 
   const filteredWarnings = searchTerm
     ? allWarnings.filter((warning: WarningType) =>
-        warning.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+      warning.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
     : [];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,7 +90,7 @@ export default function WarningTypeahead({
         {selectedWarnings.map((warningId) => {
           const warning = allWarnings.find((w: WarningType) => w.id === warningId);
           if (!warning) return null;
-          
+
           return (
             <div
               key={warningId}
@@ -125,9 +127,12 @@ export default function WarningTypeahead({
               </button>
             ))
           ) : (
-            <div className="px-4 py-2 text-gray-500">
+            !!searchTerm ? <div className="px-4 py-2 text-gray-500">
               No warnings found
             </div>
+              : <div className="px-4 py-2 text-gray-500">
+                e.g. "Is there a live actor?"
+              </div>
           )}
         </div>
       )}

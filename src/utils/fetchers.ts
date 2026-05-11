@@ -6,11 +6,9 @@ import {
   WarningWithWarningType,
   NewRoomWarning,
 } from "@/types/database.types";
+import { createClient } from "@/lib/supabase/client";
 
-const supabase = createBrowserClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+const supabase = createClient();
 
 export async function fetchRoom(id: string) {
   const { data, error } = await supabase

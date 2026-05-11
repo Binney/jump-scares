@@ -3,7 +3,9 @@
 import useSWR from 'swr';
 import WarningTypeahead from './WarningTypeahead';
 import { useState, useEffect } from 'react';
-import supabase from '@/utils/supabase';
+import { createClient } from '@/lib/supabase/client';
+
+const supabase = createClient();
 
 export default function Search({
   search,
