@@ -1,13 +1,14 @@
 "use client";
 
-import supabase from "@/utils/supabase";
 import { Room } from "@/types/database.types";
 import RoomCard from "@/components/Rooms/RoomCard";
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Search from "@/components/Search/searchForm";
+import { createClient } from "@/lib/supabase/client";
 
 const ITEMS_PER_PAGE = 12;
+const supabase = createClient();
 
 export default function SearchPage() {
   const router = useRouter();
