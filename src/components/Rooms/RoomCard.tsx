@@ -18,17 +18,6 @@ export default function RoomCard({ room }: Props) {
         <p>
           {room.city}, {room.country}
         </p>
-        {room.website_url && (
-          <a
-            href={room.website_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500 hover:underline"
-            onClick={(e) => e.stopPropagation()}
-          >
-            Visit website
-          </a>
-        )}
       </div>
     </Link>
   );
