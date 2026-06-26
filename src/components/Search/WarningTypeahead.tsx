@@ -68,7 +68,7 @@ export default function WarningTypeahead({
       <div className="flex items-center gap-2 mb-2">
         <input
           type="text"
-          placeholder="Search warnings..."
+          placeholder="Filter out warnings..."
           value={searchTerm}
           onChange={handleInputChange}
           onFocus={() => setShowDropdown(true)}
